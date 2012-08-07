@@ -1,0 +1,1 @@
+We were bored. Our IRC channel had no bot... Stuff happens!
