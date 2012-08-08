@@ -21,7 +21,7 @@ public class Bot extends PircBot {
 		log("Joining channel...");
 		this.joinChannel();
 	}
-
+	
 	@Override
 	protected void onConnect() {
 		load();
@@ -40,12 +40,14 @@ public class Bot extends PircBot {
 	protected void onJoin(String channel, String sender, String login, String hostname) {
 		if(main.ops.contains(sender)) {
 			this.op(channel, sender);
-		}
-
-		if(main.voices.contains(sender)) {
+		}else if(main.voices.contains(sender)) {
 			this.voice(channel, sender);
+		}else if(main.users.contains(sender)){
+			this.sendNotice(sender, "Welcome back " + sender);
+		}else{
+			this.sendNotice(sender, "If you have a question, don't hesitiate to ask but remember, we may be busy or unavalible.");
+			addUser(sender);
 		}
-
 		super.onJoin(channel, sender, login, hostname);
 	}
 
@@ -100,8 +102,12 @@ public class Bot extends PircBot {
 		}
 
 		if(args[0].equalsIgnoreCase(main.prefix + "help")) {
-			this.sendNotice(sender, "Commands Avaiable: !help");
+			this.sendNotice(sender, "Commands Avaiable: !help, !git");
 			this.sendNotice(sender, "OP Only Commands: !op, !deop, !voice, !devoice, !save");
+		}
+		
+		if(args[0].equalsIgnoreCase(main.prefix + "git")) {
+			this.sendNotice(sender, "Our GitHub is located at: https://github.com/darkMesa");
 		}
 
 		super.onMessage(channel, sender, login, hostname, message);
@@ -113,6 +119,8 @@ public class Bot extends PircBot {
 
 		main.ops.add(s);
 		log("\"" + s + "\" added to OPs file!");
+
+		saveOps();
 	}
 
 	public void delOp(String s) {
@@ -121,6 +129,8 @@ public class Bot extends PircBot {
 
 		main.ops.remove(s);
 		log("\"" + s + "\" removed from OPs file!");
+
+		saveOps();
 	}
 
 	public void addVoice(String s) {
@@ -129,6 +139,8 @@ public class Bot extends PircBot {
 
 		main.voices.add(s);
 		log("\"" + s + "\" added to Voices file!");
+
+		saveVoices();
 	}
 
 	public void delVoice(String s) {
@@ -137,6 +149,15 @@ public class Bot extends PircBot {
 
 		main.voices.remove(s);
 		log("\"" + s + "\" removed from Voices file!");
+
+		saveVoices();
+	}
+
+	public void addUser(String s) {
+		main.users.add(s);
+		log(s + "has been added to the userslist");
+
+		saveUsers();
 	}
 
 	private void joinServer() {
@@ -191,12 +212,23 @@ public class Bot extends PircBot {
 		}
 	}
 
+	private void saveUsers() {
+		try {
+			SLAPI.save(main.users, "users.bin");
+			log("Saved \"users.bin\"!");
+		} catch(IOException e) {
+			e.printStackTrace();
+		}
+	}
+
 	private void saveAll() {
 		try {
 			SLAPI.save(main.ops, "ops.bin");
 			log("Saved \"ops.bin\"!");
 			SLAPI.save(main.voices, "voices.bin");
 			log("Saved \"voices.bin\"!");
+			SLAPI.save(main.users, "users.bin");
+			log("Saved \"users.bin\"!");
 		} catch(IOException e) {
 			e.printStackTrace();
 		}
