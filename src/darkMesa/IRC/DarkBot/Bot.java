@@ -113,6 +113,113 @@ public class Bot extends PircBot {
 		super.onMessage(channel, sender, login, hostname, message);
 	}
 
+	protected void onNotice(String sender, String sourceLogin, String sourceHostname, String target, String notice) {
+		Boolean perm = false;
+		User[] users = this.getUsers(main.channel);
+
+		for(int i = 0; i < users.length; i++) {
+			if(users[i].isOp() && users[i].getNick().equals(sender)) {
+				perm = true;
+			}
+		}
+
+		String[] args = notice.split(" ");
+		if(perm){
+			if(args[0].equalsIgnoreCase("!help")) {
+				this.sendNotice(sender, "!topic <topic> -- set topic in " + main.channel + ".");
+				this.sendNotice(sender, "!say <message> -- send a channel-wide notice to " + main.channel + ".");
+				this.sendNotice(sender, "!notice <user> <message> -- send message to <user>");
+			}
+			if(args[0].equalsIgnoreCase("!topic")) {
+				String topic = "";
+				for(int i = 1; i < args.length; i++){
+					topic = topic + args[i] + " ";
+				}
+				topic = topic.trim();
+				this.setTopic(main.channel, topic);
+			}
+			if(args[0].equalsIgnoreCase("!say")) {
+				String msg = "";
+				for(int i = 1; i < args.length; i++){
+					msg = msg + args[i] + " ";
+				}
+				msg = msg.trim();
+				this.sendNotice(main.channel, msg);
+			}
+			if(args[0].equalsIgnoreCase("!notice")) {
+				if(args.length == 1) {
+					this.sendNotice(sender, "Please specify user and message");
+				} else if(args.length == 2) {
+					this.sendNotice(sender, "Please specify the message");
+				} else {
+					String msg = "";
+					for(int i = 2; i < args.length; i++) {
+						msg = msg + args[i] + " ";
+					}
+					msg = msg.trim();
+					for(int i = 0; i < users.length; i++) {
+						if(users[i].getNick().equals(args[1])) {
+							this.sendNotice(users[i].getNick(), msg);
+						}
+					}
+				}
+			}
+		}
+	}
+
+	protected void onPrivateMessage(String sender, String login, String hostname, String notice) {
+		Boolean perm = false;
+		User[] users = this.getUsers(main.channel);
+
+		for(int i = 0; i < users.length; i++) {
+			if(users[i].isOp() && users[i].getNick().equals(sender)) {
+				perm = true;
+			}
+		}
+
+		String[] args = notice.split(" ");
+		if(perm){
+			if(args[0].equalsIgnoreCase(main.prefix + "help")) {
+				this.sendMessage(sender, "!topic <topic> -- set topic in " + main.channel + ".");
+				this.sendMessage(sender, "!say <message> -- send a channel-wide notice to " + main.channel + ".");
+				this.sendMessage(sender, "!notice <user> <message> -- send a notice to <user>");
+			}
+			if(args[0].equalsIgnoreCase(main.prefix + "topic")) {
+				String topic = "";
+				for(int i = 1; i < args.length; i++){
+					topic = topic + args[i] + " ";
+				}
+				topic = topic.trim();
+				this.setTopic(main.channel, topic);
+			}
+			if(args[0].equalsIgnoreCase(main.prefix + "say")) {
+				String msg = "";
+				for(int i = 1; i < args.length; i++){
+					msg = msg + args[i] + " ";
+				}
+				msg = msg.trim();
+				this.sendNotice(main.channel, msg);
+			}
+			if(args[0].equalsIgnoreCase(main.prefix + "notice")) {
+				if(args.length == 1) {
+					this.sendMessage(sender, "Please specify user and message");
+				} else if(args.length == 2) {
+					this.sendMessage(sender, "Please specify the message");
+				} else {
+					String msg = "";
+					for(int i = 2; i < args.length; i++) {
+						msg = msg + args[i] + " ";
+					}
+					msg = msg.trim();
+					for(int i = 0; i < users.length; i++) {
+						if(users[i].getNick().equals(args[1])) {
+							this.sendNotice(users[i].getNick(), msg);
+						}
+					}
+				}
+			}
+		}
+	}
 	public void addOp(String s) {
 		this.op(main.channel, s);
 		log("OP'd \"" + s + "\"!");
@@ -155,7 +262,7 @@ public class Bot extends PircBot {
 
 	public void addUser(String s) {
 		main.users.add(s);
-		log(s + "has been added to the userslist");
+		log(s + " has been added to the userslist");
 
 		saveUsers();
 	}
