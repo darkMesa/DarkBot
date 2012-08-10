@@ -11,6 +11,7 @@ public class DarkBot {
 	public String channel = "#darkmesa";
 	public Set<String> ops = new HashSet<String>();
 	public Set<String> voices = new HashSet<String>();
+	public Set<String> users = new HashSet<String>();
 	public String prefix = "!";
 	
 	@SuppressWarnings("unused")
