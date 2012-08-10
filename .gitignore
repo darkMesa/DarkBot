@@ -2,5 +2,4 @@ bin/
 lib/javadocs/
 .classpath
 .project
-ops.bin
-voices.bin
+*.bin
