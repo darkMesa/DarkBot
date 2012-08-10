@@ -6,7 +6,7 @@ import java.util.Set;
 public class DarkBot {
 	
 	public String name = "DarkBot";
-	public String password = "robert312";
+	public String password = "password"; //:D
 	public String server = "irc.esper.net";
 	public String channel = "#darkmesa";
 	public Set<String> ops = new HashSet<String>();
