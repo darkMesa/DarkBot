@@ -109,6 +109,10 @@ public class Bot extends PircBot {
 		if(args[0].equalsIgnoreCase(main.prefix + "git")) {
 			this.sendNotice(sender, "Our GitHub is located at: https://github.com/darkMesa");
 		}
+		
+		if(args[0].equalsIgnoreCase(main.prefix + "paste")) {
+			this.sendNotice(channel, "To show us any errors please go to: http://pastebin.com/");
+		}
 
 		super.onMessage(channel, sender, login, hostname, message);
 	}
