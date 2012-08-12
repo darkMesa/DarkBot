@@ -14,8 +14,8 @@ public class DarkBot {
 	public Set<String> users = new HashSet<String>();
 	public String prefix = "!";
 	
-	@SuppressWarnings("unused")
 	public static void main(String[] args) {
 		Bot bot = new Bot();
+		bot.t.start();
 	}
 }

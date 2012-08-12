@@ -3,6 +3,7 @@ package darkMesa.IRC.DarkBot;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Calendar;
+import java.util.Scanner;
 
 import org.jibble.pircbot.IrcException;
 import org.jibble.pircbot.NickAlreadyInUseException;
@@ -21,6 +22,20 @@ public class Bot extends PircBot {
 		log("Joining channel...");
 		this.joinChannel();
 	}
+	
+	public Runnable r = new Runnable() {
+		@Override
+		public void run() {
+			Scanner in = new Scanner(System.in);
+			
+			while(true) {
+				if(in.hasNextLine()) {
+					sendMessage(main.channel, in.nextLine());
+				}
+			}
+		}
+	};
+	public Thread t = new Thread(r);
 	
 	@Override
 	protected void onConnect() {
