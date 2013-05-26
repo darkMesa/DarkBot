@@ -11,7 +11,7 @@ import org.jibble.pircbot.PircBot;
 import org.jibble.pircbot.User;
 
 public class Bot extends PircBot {
-	DarkBot main = new DarkBot();
+	public DarkBot main = new DarkBot();
 
 	public Bot() {
 		log("Initalizing bot...");
@@ -314,7 +314,9 @@ public class Bot extends PircBot {
 					+ main.password);
 			this.changeNick(main.name);
 			log("Nick recovered!");
-		} catch (IOException | IrcException e2) {
+		} catch (IOException e2) {
+			e2.printStackTrace();
+		} catch (IrcException e2) {
 			e2.printStackTrace();
 		}
 	}
