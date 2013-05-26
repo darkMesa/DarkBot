@@ -14,6 +14,7 @@ public class Bot extends PircBot {
 	public DarkBot main = new DarkBot();
 
 	public Bot() {
+		main.loadInfo();
 		log("Initalizing bot...");
 		this.setName(main.name);
 
