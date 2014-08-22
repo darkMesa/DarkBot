@@ -27,6 +27,7 @@ public class Bot extends PircBot {
 	public Runnable r = new Runnable() {
 		@Override
 		public void run() {
+			@SuppressWarnings("resource")
 			Scanner in = new Scanner(System.in);
 
 			while (true) {
